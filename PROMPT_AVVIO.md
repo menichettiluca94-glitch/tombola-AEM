@@ -1,4 +1,9 @@
+# PROJECT REPOSITORY
 
+Repository: https://github.com/SilvioCorso/tombolaColorata
+Token: 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
+
+---  
 
 # SCOPO DI QUESTO PROMPT — INIT-ONLY
 
