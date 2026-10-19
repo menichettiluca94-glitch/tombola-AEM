@@ -1,0 +1,532 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-vt323);
+  --font-mono: var(--font-vt323);
+  --font-display: var(--font-press-start);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* === TEMA: ARCADE SCURO (dark di default) === */
+:root,
+.dark {
+  --radius: 0.5rem;
+  --background: oklch(0.13 0.02 280); /* nero violaceo profondo */
+  --foreground: oklch(0.96 0.02 300);
+  --card: oklch(0.18 0.02 280);
+  --card-foreground: oklch(0.96 0.02 300);
+  --popover: oklch(0.16 0.02 280);
+  --popover-foreground: oklch(0.96 0.02 300);
+  --primary: oklch(0.7 0.28 350); /* hot pink arcade */
+  --primary-foreground: oklch(0.12 0.02 280);
+  --secondary: oklch(0.24 0.02 280);
+  --secondary-foreground: oklch(0.96 0.02 300);
+  --muted: oklch(0.24 0.02 280);
+  --muted-foreground: oklch(0.72 0.03 300);
+  --accent: oklch(0.85 0.22 145); /* lime neon */
+  --accent-foreground: oklch(0.12 0.02 280);
+  --destructive: oklch(0.65 0.25 25);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.7 0.28 350);
+  --chart-1: oklch(0.7 0.28 350);
+  --chart-2: oklch(0.85 0.22 145);
+  --chart-3: oklch(0.85 0.2 95);
+  --chart-4: oklch(0.78 0.2 200);
+  --chart-5: oklch(0.72 0.24 30);
+  --sidebar: oklch(0.16 0.02 280);
+  --sidebar-foreground: oklch(0.96 0.02 300);
+  --sidebar-primary: oklch(0.7 0.28 350);
+  --sidebar-primary-foreground: oklch(0.96 0.02 300);
+  --sidebar-accent: oklch(0.24 0.02 280);
+  --sidebar-accent-foreground: oklch(0.96 0.02 300);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.7 0.28 350);
+}
+
+/* variabili colore arcade accessibili ovunque.
+   Il tema attivo si imposta via `data-theme` su <html> (vedi page.tsx / SetupScreen).
+   Ogni tema sovrascrive gli 4 slot accento + bg/panel. */
+:root,
+:root[data-theme="arcadeScuro"] {
+  --arcade-pink: #ff2d95;
+  --arcade-lime: #39ff14;
+  --arcade-gold: #ffd60a;
+  --arcade-cyan: #00f0ff;
+  --arcade-bg: #0a0a12;
+  --arcade-panel: #14141f;
+}
+:root[data-theme="raveNeon"] {
+  --arcade-pink: #b026ff;  /* viola elettrico */
+  --arcade-lime: #00f0ff;  /* ciano */
+  --arcade-gold: #ff2d95;  /* magenta */
+  --arcade-cyan: #39ff14;  /* lime */
+  --arcade-bg: #0c0612;
+  --arcade-panel: #170a22;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-vt323), ui-monospace, monospace;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    /* sfondo arcade con griglia neon (theme-aware via color-mix) */
+    background-color: var(--arcade-bg);
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--arcade-pink) 4%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--arcade-lime) 4%, transparent) 1px, transparent 1px),
+      radial-gradient(circle at 20% 10%, color-mix(in srgb, var(--arcade-pink) 13%, transparent), transparent 40%),
+      radial-gradient(circle at 80% 90%, color-mix(in srgb, var(--arcade-lime) 9%, transparent), transparent 45%),
+      linear-gradient(180deg, var(--arcade-bg) 0%, #06060c 100%);
+    background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+    background-attachment: fixed;
+  }
+}
+
+/* utility class per font arcade */
+.font-display {
+  font-family: var(--font-press-start), ui-monospace, monospace;
+  letter-spacing: 0.02em;
+}
+.font-arcade {
+  font-family: var(--font-vt323), ui-monospace, monospace;
+}
+
+/* testo neon */
+.neon-pink {
+  color: var(--arcade-pink);
+  text-shadow:
+    0 0 6px rgba(255, 45, 149, 0.8),
+    0 0 14px rgba(255, 45, 149, 0.5);
+}
+.neon-lime {
+  color: var(--arcade-lime);
+  text-shadow:
+    0 0 6px rgba(57, 255, 20, 0.8),
+    0 0 14px rgba(57, 255, 20, 0.5);
+}
+.neon-gold {
+  color: var(--arcade-gold);
+  text-shadow:
+    0 0 6px rgba(255, 214, 10, 0.8),
+    0 0 14px rgba(255, 214, 10, 0.5);
+}
+.neon-cyan {
+  color: var(--arcade-cyan);
+  text-shadow:
+    0 0 6px rgba(0, 240, 255, 0.8),
+    0 0 14px rgba(0, 240, 255, 0.5);
+}
+
+/* bordo neon */
+.border-neon-pink {
+  border-color: var(--arcade-pink);
+  box-shadow:
+    0 0 0 1px var(--arcade-pink),
+    0 0 12px rgba(255, 45, 149, 0.4),
+    inset 0 0 12px rgba(255, 45, 149, 0.1);
+}
+.border-neon-lime {
+  border-color: var(--arcade-lime);
+  box-shadow:
+    0 0 0 1px var(--arcade-lime),
+    0 0 12px rgba(57, 255, 20, 0.4),
+    inset 0 0 12px rgba(57, 255, 20, 0.1);
+}
+
+/* pannello arcade con scanlines */
+.arcade-panel {
+  background-color: var(--arcade-panel);
+  border: 1px solid rgba(255, 45, 149, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(255, 45, 149, 0.15),
+    0 0 24px rgba(255, 45, 149, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+.arcade-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  border-radius: inherit;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+/* pulsante arcade */
+.btn-arcade {
+  font-family: var(--font-press-start), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--arcade-pink);
+  color: var(--arcade-pink);
+  background: rgba(255, 45, 149, 0.08);
+  box-shadow:
+    0 0 0 2px rgba(255, 45, 149, 0.1),
+    0 0 16px rgba(255, 45, 149, 0.25);
+  transition: all 0.12s ease;
+}
+.btn-arcade:hover:not(:disabled) {
+  background: rgba(255, 45, 149, 0.2);
+  box-shadow:
+    0 0 0 2px rgba(255, 45, 149, 0.2),
+    0 0 24px rgba(255, 45, 149, 0.5);
+  transform: translateY(-1px);
+}
+.btn-arcade:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.btn-arcade:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-arcade-lime {
+  font-family: var(--font-press-start), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--arcade-lime);
+  color: var(--arcade-lime);
+  background: rgba(57, 255, 20, 0.08);
+  box-shadow:
+    0 0 0 2px rgba(57, 255, 20, 0.1),
+    0 0 16px rgba(57, 255, 20, 0.25);
+  transition: all 0.12s ease;
+}
+.btn-arcade-lime:hover:not(:disabled) {
+  background: rgba(57, 255, 20, 0.2);
+  box-shadow:
+    0 0 0 2px rgba(57, 255, 20, 0.2),
+    0 0 24px rgba(57, 255, 20, 0.5);
+  transform: translateY(-1px);
+}
+.btn-arcade-lime:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === ANIMAZIONI CARD === */
+
+/* flip 3D della card */
+.card-3d {
+  perspective: 1000px;
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+/* Selettore composto: card-flipped è applicato allo stesso elemento di card-inner
+   (vedi Card.tsx). Un selettore discendente (.card-flipped .card-inner) non matcherebbe
+   mai e il flip non avverrebbe, lasciando la card sulla faccia numero senza colore. */
+.card-inner.card-flipped {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+.card-back-face {
+  transform: rotateY(180deg);
+}
+
+/* spotlight pulsante durante lo scorrimento */
+.card-spotlight {
+  animation: spotlight-pulse 0.4s ease-in-out;
+}
+@keyframes spotlight-pulse {
+  0% {
+    box-shadow:
+      0 0 0 2px var(--arcade-gold),
+      0 0 18px rgba(255, 214, 10, 0.6);
+    transform: scale(1.06);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    transform: scale(1);
+  }
+}
+
+/* card bersaglio finale: glow forte prima del flip */
+.card-target-glow {
+  animation: target-glow 0.5s ease-in-out;
+}
+@keyframes target-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--arcade-pink);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px var(--arcade-pink),
+      0 0 32px rgba(255, 45, 149, 0.8);
+    transform: scale(1.12);
+  }
+  100% {
+    box-shadow: 0 0 0 2px var(--arcade-pink);
+    transform: scale(1.04);
+  }
+}
+
+/* CHARGE UP: animazione epica prima del flip.
+   La card si carica vibrando, cresce, il glow esplode,
+   poi parte il flip. */
+.card-charging {
+  animation: card-charge 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  z-index: 30;
+}
+@keyframes card-charge {
+  0% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 0 0 0 var(--arcade-gold);
+    filter: brightness(1);
+  }
+  15% {
+    transform: scale(1.18) rotate(-1.5deg);
+    box-shadow:
+      0 0 0 3px var(--arcade-gold),
+      0 0 24px rgba(255, 214, 10, 0.7);
+    filter: brightness(1.3);
+  }
+  30% {
+    transform: scale(1.16) rotate(1.5deg);
+    box-shadow:
+      0 0 0 3px var(--arcade-pink),
+      0 0 28px rgba(255, 45, 149, 0.7);
+    filter: brightness(1.4);
+  }
+  45% {
+    transform: scale(1.2) rotate(-1deg);
+    box-shadow:
+      0 0 0 4px var(--arcade-cyan),
+      0 0 32px rgba(0, 240, 255, 0.8);
+    filter: brightness(1.5);
+  }
+  60% {
+    transform: scale(1.22) rotate(0.5deg);
+    box-shadow:
+      0 0 0 5px var(--arcade-lime),
+      0 0 36px rgba(57, 255, 20, 0.8);
+    filter: brightness(1.6);
+  }
+  80% {
+    transform: scale(1.25) rotate(0deg);
+    box-shadow:
+      0 0 0 6px var(--arcade-gold),
+      0 0 48px rgba(255, 214, 10, 1),
+      0 0 80px rgba(255, 45, 149, 0.6);
+    filter: brightness(1.8);
+  }
+  100% {
+    transform: scale(1.1) rotate(0deg);
+    box-shadow:
+      0 0 0 3px var(--arcade-gold),
+      0 0 32px rgba(255, 214, 10, 0.8);
+    filter: brightness(1.3);
+  }
+}
+
+/* card scoperta: glow persistente del colore + pop iniziale */
+.card-revealed-glow {
+  animation: revealed-pop 0.5s ease-out;
+}
+@keyframes revealed-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* glow persistente sulle card scoperte (colore del proprietario) */
+.card-revealed-static {
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.4),
+    0 0 12px var(--card-glow, transparent),
+    inset 0 0 16px rgba(0, 0, 0, 0.25);
+}
+
+/* (legacy) card coperta da bonus — non più usata, tenuta per compatibilità */
+.card-covered {
+  position: relative;
+}
+
+/* scrollbars arcade */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--arcade-pink) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--arcade-pink);
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(255, 45, 149, 0.6);
+}
+
+/* animazione vittoria modale: confetti shake */
+@keyframes win-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-3px, 2px) rotate(-1deg); }
+  40% { transform: translate(3px, -2px) rotate(1deg); }
+  60% { transform: translate(-2px, -1px) rotate(-0.5deg); }
+  80% { transform: translate(2px, 1px) rotate(0.5deg); }
+}
+.win-shake {
+  animation: win-shake 0.5s ease-in-out 2;
+}
+
+/* effetto blink per titoli */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.35; }
+}
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+/* input numerico arcade */
+.input-arcade {
+  font-family: var(--font-press-start), ui-monospace, monospace;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--arcade-cyan);
+  color: var(--arcade-cyan);
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.6);
+  box-shadow:
+    0 0 0 2px rgba(0, 240, 255, 0.1),
+    inset 0 0 8px rgba(0, 240, 255, 0.15);
+  text-align: center;
+}
+.input-arcade:focus {
+  outline: none;
+  border-color: var(--arcade-gold);
+  color: var(--arcade-gold);
+  text-shadow: 0 0 6px rgba(255, 214, 10, 0.7);
+  box-shadow:
+    0 0 0 2px rgba(255, 214, 10, 0.15),
+    0 0 18px rgba(255, 214, 10, 0.4),
+    inset 0 0 8px rgba(255, 214, 10, 0.2);
+}
+
+/* effetto "press start" sul logo */
+@keyframes logo-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 6px rgba(255, 45, 149, 0.8),
+      0 0 18px rgba(255, 45, 149, 0.5),
+      0 0 36px rgba(255, 45, 149, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(57, 255, 20, 0.9),
+      0 0 24px rgba(57, 255, 20, 0.6),
+      0 0 48px rgba(57, 255, 20, 0.4);
+  }
+}
+.logo-pulse {
+  animation: logo-pulse 2.4s ease-in-out infinite;
+}
+
+/* griglia sfondo animato sottile */
+@keyframes grid-drift {
+  0% { background-position: 0 0, 0 0, 50% 50%, 50% 50%, 0 0; }
+  100% { background-position: 40px 40px, -40px 40px, 50% 50%, 50% 50%, 0 0; }
+}
+body {
+  animation: grid-drift 8s linear infinite;
+}
+
+/* evita il "layout shift" dei dialog radix su mobile */
+[data-radix-popper-content-wrapper] {
+  z-index: 60 !important;
+}
+
+/* === MODAL CUSTOM (z-index altissimo per non essere coperto da nulla) === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+}
+.modal-content {
+  position: relative;
+  z-index: 10000;
+  max-width: 42rem;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
