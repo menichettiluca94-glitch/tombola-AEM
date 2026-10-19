@@ -1,7 +1,4 @@
 
-
----  
-
 # SCOPO DI QUESTO PROMPT — INIT-ONLY
 
 Questo è un prompt di **SOLO INIZIALIZZAZIONE e RECUPERO CONTESTO**.
