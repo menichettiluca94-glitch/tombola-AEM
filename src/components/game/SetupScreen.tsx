@@ -14,9 +14,15 @@ import {
   Palette,
   RotateCcw,
   ListOrdered,
+  PencilLine,
+  ChevronRight,
 } from "lucide-react";
 
-export function SetupScreen() {
+interface SetupScreenProps {
+  onNavigateToEdit: () => void;
+}
+
+export function SetupScreen({ onNavigateToEdit }: SetupScreenProps) {
   const startGame = useGameStore((s) => s.startGame);
   const hasSavedGame = useGameStore(
     (s) => s.phase === "playing" && s.config !== null && s.cards.length > 0,
@@ -409,6 +415,34 @@ export function SetupScreen() {
               </Step>
             </ol>
           </div>
+        </motion.section>
+
+        {/* PULSANTE PER APRIRE L'EDITOR DELLA SMORFIA */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="mt-5 max-w-2xl w-full"
+        >
+          <button
+            onClick={onNavigateToEdit}
+            className="w-full text-left group cursor-pointer"
+          >
+            <div className="arcade-panel rounded-xl p-4 sm:p-5 transition-all duration-200 group-hover:border-cyan-400/50 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <PencilLine className="w-5 h-5 neon-pink transition-transform group-hover:scale-110" />
+                  <h3 className="font-display text-base sm:text-lg neon-pink">
+                    Modifica Elenco Smorfia
+                  </h3>
+                </div>
+                <ChevronRight className="w-5 h-5 text-cyan-400 transition-transform group-hover:translate-x-1" />
+              </div>
+              <p className="text-lg text-gray-400 mt-1">
+                Personalizza significati e descrizioni della tua Smorfia
+              </p>
+            </div>
+          </button>
         </motion.section>
       </main>
 

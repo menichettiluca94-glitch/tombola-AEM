@@ -50,14 +50,9 @@ export function ErrorModal() {
               <X className="w-4 h-4 text-foreground" />
             </button>
 
-            <motion.div
-              initial={{ rotate: -20 }}
-              animate={{ rotate: [-20, 20, -20, 20, 0] }}
-              transition={{ duration: 0.6 }}
-              className="mx-auto mb-4 w-16 h-16 rounded-full bg-[rgba(255,214,10,0.15)] border-2 border-[var(--arcade-gold)] flex items-center justify-center"
-            >
+            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-[rgba(255,214,10,0.15)] border-2 border-[var(--arcade-gold)] flex items-center justify-center">
               <AlertTriangle className="w-8 h-8 neon-gold" />
-            </motion.div>
+            </div>
 
             <div className="font-display text-sm sm:text-base neon-gold mb-3">
               NUMERO GIÀ USCITO!
@@ -69,7 +64,7 @@ export function ErrorModal() {
               onClick={dismiss}
               className="btn-arcade mt-6 px-6 py-2.5 rounded-lg text-xs"
             >
-              HO CAPITO, SCEGLIO UN ALTRO
+              HO CAPITO, SCELGO UN ALTRO
             </button>
           </motion.div>
         </motion.div>
@@ -77,3 +72,5 @@ export function ErrorModal() {
     </AnimatePresence>
   );
 }
+
+export default ErrorModal;

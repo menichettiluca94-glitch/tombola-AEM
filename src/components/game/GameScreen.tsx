@@ -22,7 +22,7 @@ import { WinModal } from "./WinModal";
 import { ErrorModal } from "./ErrorModal";
 import { RecapModal } from "./RecapModal";
 import type { Card as CardType, WinLevel } from "@/lib/game/types";
-import { Sparkles, Repeat, ShieldX, X } from "lucide-react";
+import { Sparkles, Repeat, ShieldX, X, BookOpen } from "lucide-react";
 
 export function GameScreen() {
   const cards = useGameStore((s) => s.cards);
@@ -34,6 +34,9 @@ export function GameScreen() {
   const lastWin = useGameStore((s) => s.lastWin);
   const sound = useGameStore((s) => s.sound);
   const applyCopri2 = useGameStore((s) => s.applyCopri2);
+
+  // Preleviamo la lista della smorfia persistente dallo store globale
+  const smorfiaList = useGameStore((s: any) => s.smorfiaList);
 
   const [spotlightIndex, setSpotlightIndex] = useState<number | null>(null);
   const [isCharging, setIsCharging] = useState(false);
@@ -152,14 +155,17 @@ export function GameScreen() {
     // in animazione, chiamiamo finalizeReveal per aggiornare lo stato.
     const finalizeDelay = flipDelay + 350;
     const finalT = setTimeout(() => {
-      const st = useGameStore.getState();
-      const targetCard = st.cards.find((c) => c.id === spinTargetId);
+      const st = useGameStore.getState() as any;
+      const targetCard = st.cards.find((c: any) => c.id === spinTargetId);
       if (targetCard) {
         st.finalizeReveal(targetCard.id);
-        const stAfter = useGameStore.getState();
-        const newWin = stAfter.lastWin; // null se nessuna vincita questo turno
 
-        // POPUP SIMBOLO (se la card aveva un simbolo)
+        // Legge dallo store globale aggiornato
+        const smorfiaInfo = st.smorfiaList[targetCard.number];
+
+        const stAfter = useGameStore.getState() as any;
+        const newWin = stAfter.lastWin;
+
         if (targetCard.symbol && st.sound.sfxEnabled) {
           setTimeout(() => playSymbol(), 400);
           setTimeout(() => {
@@ -176,9 +182,12 @@ export function GameScreen() {
         // 2) tipo di vincita (se ambo/terna/..., dopo il numero)
         // 3) simbolo bonus (se presente, dopo la vincita)
         if (st.sound.voiceEnabled && isVoiceSupported()) {
-          // (1) numero + colore
           setTimeout(() => {
-            speak(`Numero ${targetCard.number}: ${targetCard.color.name}!`, {
+            const fraseVoce = smorfiaInfo
+              ? `Numero ${targetCard.number}, ${smorfiaInfo.significato}! Colore: ${targetCard.color.name}!`
+              : `Numero ${targetCard.number}: ${targetCard.color.name}!`;
+
+            speak(fraseVoce, {
               interrupt: true,
             });
           }, 400);
@@ -186,7 +195,7 @@ export function GameScreen() {
           // (2) vincita — dopo che il numero+colore è stato detto
           if (newWin) {
             const player = stAfter.config?.players.find(
-              (p) => p.color.key === newWin.color.key,
+              (p: any) => p.color.key === newWin.color.key,
             );
             const subject = player?.name
               ? `${player.name}`
@@ -272,24 +281,43 @@ export function GameScreen() {
   const lastCalled =
     calledNumbers.length > 0 ? calledNumbers[calledNumbers.length - 1] : null;
 
+  // Recupera il significato aggiornato dallo store globale
+  const currentSmorfia = lastCalled !== null ? smorfiaList[lastCalled] : null;
+
   return (
     <div className="min-h-screen flex flex-col">
       <GameHeader onOpenRecap={() => setRecapOpen(true)} />
 
       <main className="flex-1 flex flex-col px-3 sm:px-4 py-2 gap-2 min-h-0">
-        {/* PRIMO DIV: stato + input numerico + bonus (ex-footer inglobato qui) */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {lastCalled !== null ? (
-                <div className="arcade-panel rounded-lg px-3 py-1.5 flex items-center gap-2">
-                  <span className="font-arcade text-base text-muted-foreground">
-                    Ultimo:
-                  </span>
-                  <span className="font-display text-xl neon-gold">
-                    {lastCalled}
-                  </span>
-                </div>
+                <>
+                  <div className="arcade-panel rounded-lg px-3 py-1.5 flex items-center gap-2">
+                    <span className="font-arcade text-base text-muted-foreground">
+                      Ultimo:
+                    </span>
+                    <span className="font-display text-xl neon-gold">
+                      {lastCalled}
+                    </span>
+                  </div>
+
+                  {/* BANNER SMORFIA NAPOLETANA */}
+                  {currentSmorfia && (
+                    <div className="arcade-panel rounded-lg px-3 py-1.5 flex items-center gap-2 border-cyan-500/40 bg-cyan-950/20">
+                      <BookOpen className="w-4 h-4 text-cyan-400 shrink-0" />
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-arcade text-base text-muted-foreground">
+                          Smorfia:
+                        </span>
+                        <span className="font-display text-xl text-cyan-300">
+                          {currentSmorfia.significato}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="arcade-panel rounded-lg px-3 py-1.5">
                   <span className="font-arcade text-lg text-muted-foreground">
